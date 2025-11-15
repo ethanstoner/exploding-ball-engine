@@ -1,5 +1,5 @@
 {
-  "name": "exploding-ball-engine",
+  "name": "explodingballengine",
   "version": "1.0.0",
   "description": "Exploding Ball Engine - A web-based physics simulation featuring realistic physics, collision detection, and beautiful visuals.",
   "main": "engine.js",

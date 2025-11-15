@@ -30,9 +30,5 @@ Thumbs.db
 node_modules/
 package-lock.json
 
-# Recording scripts (optional, can be kept)
-# record_demo.js
-# record_demo.py
-# record_demo_simple.sh
-# RECORD_INSTRUCTIONS.md
-demo_frames/
+# Recording scripts
+scripts/demo_frames/

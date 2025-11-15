@@ -30,7 +30,7 @@ async function recordDemo() {
     await new Promise(resolve => setTimeout(resolve, 1500)); // Wait for full render
     
     // Create frames directory
-    const framesDir = 'demo_frames';
+    const framesDir = path.join(__dirname, 'demo_frames');
     if (!fs.existsSync(framesDir)) {
         fs.mkdirSync(framesDir);
     }
