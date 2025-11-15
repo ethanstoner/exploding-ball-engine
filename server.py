@@ -17,7 +17,12 @@ class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 
 def main():
     # Change to script directory
-    os.chdir(Path(__file__).parent)
+    script_dir = Path(__file__).parent
+    os.chdir(script_dir)
+    # Change to src directory for serving files
+    src_dir = script_dir / 'src'
+    if src_dir.exists():
+        os.chdir(src_dir)
     
     Handler = MyHTTPRequestHandler
     

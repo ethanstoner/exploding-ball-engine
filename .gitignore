@@ -29,6 +29,3 @@ Thumbs.db
 # Node.js
 node_modules/
 package-lock.json
-
-# Recording scripts
-scripts/demo_frames/
