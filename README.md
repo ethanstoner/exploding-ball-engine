@@ -2,7 +2,9 @@
 
 A web-based physics simulation featuring an exploding ball engine with realistic physics, collision detection, and beautiful visuals.
 
-![Demo](demo.gif)
+<p align="center">
+  <img src="demo.gif" alt="Exploding Ball Engine Demo" width="1200"/>
+</p>
 
 ## Features
 
