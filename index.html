@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exploding Ball Engine</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(120, 120, 120, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(100, 100, 100, 0.08) 0%, transparent 50%),
+                linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #e0e0e0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+        }
+
+        .controls {
+            background: rgba(30, 30, 30, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-start;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            flex-basis: 100%;
+            margin-top: 5px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            align-items: flex-start;
+            min-width: 140px;
+        }
+
+        label {
+            font-size: 0.9em;
+            font-weight: 500;
+            opacity: 0.9;
+            width: 100%;
+        }
+
+        input[type="number"] {
+            padding: 10px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(20, 20, 20, 0.8);
+            color: #e0e0e0;
+            font-size: 1em;
+            width: 100%;
+            min-width: 120px;
+            max-width: 140px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.5);
+            background: rgba(25, 25, 25, 0.9);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+        }
+
+        input[type="number"]::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        button {
+            padding: 12px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            color: #e0e0e0;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            white-space: nowrap;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        #canvas-container {
+            background: #1a1a1a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+            width: 100%;
+            max-width: 1200px;
+            height: 600px;
+            position: relative;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .info {
+            background: rgba(30, 30, 30, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            text-align: center;
+            max-width: 600px;
+            color: #b0b0b0;
+        }
+
+        small {
+            width: 100%;
+            max-width: 140px;
+        }
+
+        .warning {
+            background: rgba(255, 193, 7, 0.15);
+            border: 1px solid rgba(255, 193, 7, 0.4);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            margin-top: 5px;
+            display: none;
+            width: 100%;
+            max-width: 140px;
+            box-sizing: border-box;
+            color: #ffd700;
+        }
+
+        .warning.show {
+            display: block;
+        }
+
+        input:invalid {
+            border-color: rgba(255, 100, 100, 0.5);
+        }
+
+        input:out-of-range {
+            border-color: rgba(255, 193, 7, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Exploding Ball Engine</h1>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label for="velocityX">Velocity X:</label>
+                <input type="number" id="velocityX" placeholder="0" value="10" step="0.1">
+            </div>
+            <div class="control-group">
+                <label for="velocityY">Velocity Y:</label>
+                <input type="number" id="velocityY" placeholder="0" value="-5" step="0.1">
+            </div>
+            <div class="control-group">
+                <label for="miniBalls">Mini Balls (1-100):</label>
+                <input type="number" id="miniBalls" placeholder="20" value="20" step="1" min="1" max="100" title="Enter a value between 1 and 100">
+                <small style="font-size: 0.75em; opacity: 0.7; display: block; margin-top: 2px;">Recommended: 5-50 for best performance</small>
+                <div class="warning" id="miniBallsWarning">High values may cause performance issues. Values over 50 are not recommended.</div>
+            </div>
+            <div class="button-group">
+                <button id="launchBtn">Launch Ball</button>
+                <button id="resetBtn">Reset</button>
+            </div>
+        </div>
+
+        <div id="canvas-container">
+            <canvas id="gameCanvas"></canvas>
+        </div>
+
+        <div class="info">
+            <p>Enter velocity values and click "Launch Ball" to send a ball flying. It will explode into mini balls with realistic physics!</p>
+        </div>
+    </div>
+
+    <script src="engine.js"></script>
+</body>
+</html>
