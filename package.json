@@ -1,0 +1,23 @@
+{
+  "name": "exploding-ball-engine",
+  "version": "1.0.0",
+  "description": "Exploding Ball Engine - A web-based physics simulation featuring realistic physics, collision detection, and beautiful visuals.",
+  "main": "engine.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ethanstoner/exploding-ball-engine.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ethanstoner/exploding-ball-engine/issues"
+  },
+  "homepage": "https://github.com/ethanstoner/exploding-ball-engine#readme",
+  "dependencies": {
+    "puppeteer": "^24.30.0"
+  }
+}

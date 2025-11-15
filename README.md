@@ -2,6 +2,8 @@
 
 A web-based physics simulation featuring an exploding ball engine with realistic physics, collision detection, and beautiful visuals.
 
+![Demo](demo.gif)
+
 ## Features
 
 - **Physics Engine**: Powered by Matter.js for accurate physics simulation
